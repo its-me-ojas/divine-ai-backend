@@ -1,5 +1,6 @@
 from fastapi import APIRouter, status
 from fastapi.param_functions import Depends
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 from starlette.exceptions import HTTPException
@@ -31,12 +32,17 @@ def register(user: UserCreate, session: Session = Depends(get_session)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
         )
+
 @router.post("/login")
-def login(user:UserLogin,session:Session=Depends(get_session)):
-    statement=select(User).where(User.email==user.email)
+def login(
+    form_data:OAuth2PasswordRequestForm= Depends(),
+    # user:UserLogin,
+    session:Session=Depends(get_session)
+):
+    statement=select(User).where(User.email==form_data.username)
     result=session.exec(statement).first()
 
-    if not result or not verify_password(user.password,result.hashed_password):
+    if not result or not verify_password(form_data.password,result.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials"

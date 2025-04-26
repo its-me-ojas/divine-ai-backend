@@ -1,4 +1,6 @@
 from datetime import timedelta
+from fastapi.security.oauth2 import OAuth2PasswordBearer
+from typing_extensions import Union
 from jose import jwt
 from datetime import datetime
 from passlib.context import CryptContext
@@ -14,7 +16,11 @@ def hash_password(password:str) -> str:
 def verify_password(password:str,hashed:str)-> bool:
     return pwd_context.verify(password,hashed)
 
-def create_access_token(data:dict)-> str:
-    expire= datetime.utcnow()+timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    data.update({"exp":expire})
-    return jwt.encode(data,SECRET_KEY,ALGORITHM)
+def create_access_token(data:dict,expires_delta:Union[timedelta,None]=None):
+    to_encode= data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode.update({"exp":expire})
+    encoded_jwt=jwt.encode(to_encode,SECRET_KEY,ALGORITHM)
+    return encoded_jwt
+
+oauth2_scheme= OAuth2PasswordBearer(tokenUrl="/auth/login")
