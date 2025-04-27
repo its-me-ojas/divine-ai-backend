@@ -18,7 +18,10 @@ app = FastAPI()
 # Configure CORS - use wildcard to allow all origins for testing
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],    # Allow all origins for testing
+    allow_origins=[
+        "http://localhost:8080",
+        "https://divine-ai.vercel.app"
+    ],
     allow_credentials=False,  # Changed to False because wildcard origin requires this
     allow_methods=["*"],
     allow_headers=["*"],
