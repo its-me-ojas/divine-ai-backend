@@ -18,6 +18,7 @@ def register(user: UserCreate, session: Session = Depends(get_session)):
     db_user=User(
         email=user.email,
         hashed_password=hashed_pw,
+        full_name=user.full_name,
         preferred_language=user.preferred_language,
         verse_theme=user.verse_theme,
     )
