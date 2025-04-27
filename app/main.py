@@ -20,7 +20,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:8080",
-        "https://divine-ai.vercel.app"
+        "https://localhost:8080",
+        "https://divine-ai.vercel.app",
+        "http://divine-ai.vercel.app",
     ],
     allow_credentials=False,  # Changed to False because wildcard origin requires this
     allow_methods=["*"],
