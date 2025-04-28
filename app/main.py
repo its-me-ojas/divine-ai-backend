@@ -21,10 +21,11 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8080",
         "https://localhost:8080",
+        "http://127.0.0.1:8080",  # Add alternative localhost
         "https://divine-ai.vercel.app",
         "http://divine-ai.vercel.app",
     ],
-    allow_credentials=False,  # Changed to False because wildcard origin requires this
+    allow_credentials=True,  # Enable credentials
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"],
@@ -34,22 +35,6 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"status": "ok", "message": "Divine AI API is running"}
-
-# Add a middleware to handle OPTIONS requests
-@app.middleware("http")
-async def options_middleware(request: Request, call_next):
-    if request.method == "OPTIONS":
-        return JSONResponse(
-            content={"message": "CORS preflight handled"},
-            status_code=200,
-            headers={
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-                "Access-Control-Max-Age": "86400",  # Cache preflight for 24 hours
-            },
-        )
-    return await call_next(request)
 
 # Include routers
 app.include_router(auth.router)
