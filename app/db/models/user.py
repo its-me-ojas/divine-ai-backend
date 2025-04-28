@@ -13,6 +13,7 @@ class User(SQLModel, table=True):
     # Preferences
     preferred_language: Optional[str] = "en"
     verse_theme: Optional[str] = "gita"
+    dark_mode_enabled: Optional[bool] = Field(default=False)
 
     # Daily features
     last_checked: Optional[datetime]=None

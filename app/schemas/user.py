@@ -32,6 +32,7 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     preferred_language: Optional[str] = None
     verse_theme: Optional[str] = None
-    
+    dark_mode_enabled: Optional[bool] = None
+
     class Config:
         orm_mode = True
